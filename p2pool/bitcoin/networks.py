@@ -144,6 +144,28 @@ nets = dict(
         DUMB_SCRYPT_DIFF=2**16,
         DUST_THRESHOLD=1e8,
     ),
+    
+    slothcoin=math.Object(
+        P2P_PREFIX='f9bebbd2'.decode('hex'),
+        P2P_PORT=5107,
+        ADDRESS_VERSION=63,
+        RPC_PORT=5108,
+        RPC_CHECK=defer.inlineCallbacks(lambda bitcoind: defer.returnValue(
+            'SlothCoinaddress' in (yield bitcoind.rpc_help()) and
+            (yield bitcoind.rpc_getinfo())['testnet']
+        )),
+        SUBSIDY_FUNC=lambda height: 500000*100000000,
+        POW_FUNC=data.sha3,
+        BLOCK_PERIOD=60, # s
+        SYMBOL='SLOTH',
+        CONF_FILE_FUNC=lambda: os.path.join(os.path.join(os.environ['APPDATA'], 'SlothCoin') if platform.system() == 'Windows' else os.path.expanduser('~/Library/Application Support/SlothCoin/') if platform.system() == 'Darwin' else os.path.expanduser('~/.SlothCoin'), 'SlothCoin.conf'),
+        BLOCK_EXPLORER_URL_PREFIX='',
+        ADDRESS_EXPLORER_URL_PREFIX='',
+        TX_EXPLORER_URL_PREFIX='',
+        SANE_TARGET_RANGE=(2**256//2**32//1000 - 1, 2**256//2**32 - 1),
+        DUMB_SCRYPT_DIFF=1,
+        DUST_THRESHOLD=0.001e8,
+    ),
 
     terracoin=math.Object(
         P2P_PREFIX='42babe56'.decode('hex'),
