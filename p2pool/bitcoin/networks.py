@@ -152,7 +152,7 @@ nets = dict(
         RPC_PORT=5108,
         RPC_CHECK=defer.inlineCallbacks(lambda bitcoind: defer.returnValue(
             'SlothCoinaddress' in (yield bitcoind.rpc_help()) and
-            (yield bitcoind.rpc_getinfo())['testnet']
+            not (yield bitcoind.rpc_getinfo())['testnet']
         )),
         SUBSIDY_FUNC=lambda height: 500000*100000000,
         POW_FUNC=data.sha3,
