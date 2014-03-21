@@ -102,6 +102,25 @@ nets = dict(
         ANNOUNCE_CHANNEL='',
         VERSION_CHECK=lambda v: True,
     ),
+    
+    helixcoin=math.Object(
+        PARENT=networks.nets['helixcoin'],
+        SHARE_PERIOD=16, # seconds
+        CHAIN_LENGTH=4*60*60//16, # shares
+        REAL_CHAIN_LENGTH=4*60*60//16, # shares
+        TARGET_LOOKBEHIND=64, # shares
+        SPREAD=32, # blocks
+        IDENTIFIER='fc7007e3a087914f'.decode('hex'),
+        PREFIX='24730a77265b390b'.decode('hex'),
+        P2P_PORT=9507,
+        MIN_TARGET=0,
+        MAX_TARGET=2**256//2**32 - 1,
+        PERSIST=True,#For initial start of main node set this to false
+        WORKER_PORT=9506,
+        BOOTSTRAP_ADDRS=''.split(' '),
+        ANNOUNCE_CHANNEL='',
+        VERSION_CHECK=lambda v: True,
+    ),
 
     terracoin=math.Object(
         PARENT=networks.nets['terracoin'],
