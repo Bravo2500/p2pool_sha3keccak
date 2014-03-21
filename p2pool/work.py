@@ -89,10 +89,10 @@ class WorkerBridge(worker_interface.WorkerBridge):
             bb = self.node.best_block_header.value
             if bb is not None and bb['previous_block'] == t['previous_block'] and self.node.net.PARENT.POW_FUNC(bitcoin_data.block_header_type.pack(bb)) <= t['bits'].target:
                 print 'Skipping from block %x to block %x!' % (bb['previous_block'],
-                    bitcoin_data.hash256(bitcoin_data.block_header_type.pack(bb)))
+                    bitcoin_data.sha3(bitcoin_data.block_header_type.pack(bb)))
                 t = dict(
                     version=bb['version'],
-                    previous_block=bitcoin_data.hash256(bitcoin_data.block_header_type.pack(bb)),
+                    previous_block=bitcoin_data.sha3(bitcoin_data.block_header_type.pack(bb)),
                     bits=bb['bits'], # not always true
                     coinbaseflags='',
                     height=t['height'] + 1,
@@ -217,7 +217,7 @@ class WorkerBridge(worker_interface.WorkerBridge):
             mm_data = ''
             mm_later = []
         
-        tx_hashes = [bitcoin_data.hash256(bitcoin_data.tx_type.pack(tx)) for tx in self.current_work.value['transactions']]
+        tx_hashes = [bitcoin_data.sha3(bitcoin_data.tx_type.pack(tx)) for tx in self.current_work.value['transactions']]
         tx_map = dict(zip(tx_hashes, self.current_work.value['transactions']))
         
         previous_share = self.node.tracker.items[self.node.best_share_var.value] if self.node.best_share_var.value is not None else None
@@ -338,7 +338,7 @@ class WorkerBridge(worker_interface.WorkerBridge):
             new_packed_gentx = packed_gentx[:-self.COINBASE_NONCE_LENGTH-4] + coinbase_nonce + packed_gentx[-4:] if coinbase_nonce != '\0'*self.COINBASE_NONCE_LENGTH else packed_gentx
             new_gentx = bitcoin_data.tx_type.unpack(new_packed_gentx) if coinbase_nonce != '\0'*self.COINBASE_NONCE_LENGTH else gentx
             
-            header_hash = bitcoin_data.hash256(bitcoin_data.block_header_type.pack(header))
+            header_hash = bitcoin_data.sha3(bitcoin_data.block_header_type.pack(header))
             pow_hash = self.node.net.PARENT.POW_FUNC(bitcoin_data.block_header_type.pack(header))
             try:
                 if pow_hash <= header['bits'].target or p2pool.DEBUG:
@@ -352,7 +352,7 @@ class WorkerBridge(worker_interface.WorkerBridge):
             
             user, _, _, _ = self.get_user_details(user)
             assert header['previous_block'] == ba['previous_block']
-            assert header['merkle_root'] == bitcoin_data.check_merkle_link(bitcoin_data.hash256(new_packed_gentx), merkle_link)
+            assert header['merkle_root'] == bitcoin_data.check_merkle_link(bitcoin_data.sha3(new_packed_gentx), merkle_link)
             assert header['bits'] == ba['bits']
             
             on_time = self.new_work_event.times == lp_count
