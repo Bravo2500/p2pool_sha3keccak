@@ -179,7 +179,7 @@ def merkle_hash(hashes):
         return 0
     hash_list = list(hashes)
     while len(hash_list) > 1:
-        hash_list = [hash256(merkle_record_type.pack(dict(left=left, right=right)))
+        hash_list = [sha3(merkle_record_type.pack(dict(left=left, right=right)))
             for left, right in zip(hash_list[::2], hash_list[1::2] + [hash_list[::2][-1]])]
     return hash_list[0]
 
@@ -191,7 +191,7 @@ def calculate_merkle_link(hashes, index):
     while len(hash_list) > 1:
         hash_list = [
             (
-                lambda _left=left, _right=right: hash256(merkle_record_type.pack(dict(left=_left(), right=_right()))),
+                lambda _left=left, _right=right: sha3(merkle_record_type.pack(dict(left=_left(), right=_right()))),
                 left_f or right_f,
                 (left_l if left_f else right_l) + [dict(side=1, hash=right) if left_f else dict(side=0, hash=left)],
             )
@@ -213,7 +213,7 @@ def calculate_merkle_link(hashes, index):
 def check_merkle_link(tip_hash, link):
     if link['index'] >= 2**len(link['branch']):
         raise ValueError('index too large')
-    return reduce(lambda c, (i, h): hash256(merkle_record_type.pack(
+    return reduce(lambda c, (i, h): sha3(merkle_record_type.pack(
         dict(left=h, right=c) if (link['index'] >> i) & 1 else
         dict(left=c, right=h)
     )), enumerate(link['branch']), tip_hash)
