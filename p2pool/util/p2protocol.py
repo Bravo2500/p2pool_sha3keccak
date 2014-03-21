@@ -40,10 +40,10 @@ class Protocol(protocol.Protocol):
             checksum = yield 4
             payload = yield length
             
-            if hashlib.sha256(hashlib.sha256(payload).digest()).digest()[:4] != checksum:
+            if hashlib.sha3_256(payload).digest()[:4] != checksum:
                 print 'invalid hash for', self.transport.getPeer().host, repr(command), length, checksum.encode('hex')
                 if p2pool.DEBUG:
-                    print hashlib.sha256(hashlib.sha256(payload).digest()).digest()[:4].encode('hex'), payload.encode('hex')
+                    print hashlib.sha3_256(payload).digest()[:4].encode('hex'), payload.encode('hex')
                 self.badPeerHappened()
                 continue
             
@@ -91,7 +91,7 @@ class Protocol(protocol.Protocol):
         payload = type_.pack(payload2)
         if len(payload) > self._max_payload_length:
             raise TooLong('payload too long')
-        data = self._message_prefix + struct.pack('<12sI', command, len(payload)) + hashlib.sha256(hashlib.sha256(payload).digest()).digest()[:4] + payload
+        data = self._message_prefix + struct.pack('<12sI', command, len(payload)) + hashlib.sha3_256(payload).digest()[:4] + payload
         self.traffic_happened.happened('p2p/out', len(data))
         self.transport.write(data)
     
