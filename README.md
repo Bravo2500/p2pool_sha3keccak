@@ -1,6 +1,8 @@
 * Original P2Pool source: https://github.com/forrestv/p2pool (BIG THANKS)
 * Original PythonSHA3 source: https://bitbucket.org/tiran/pykeccak (THANK YOU AS WELL)
 
+Please consider donating some Bitcoin for the required work to get this project completed: 1HLstfdaXpV48BnTpG1zKRrZaRFXmAezeU
+
 Requirements:
 -------------------------
 Generic:
