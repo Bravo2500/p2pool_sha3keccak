@@ -13,7 +13,7 @@ def hash256(data):
 
 #sha3_256 implementation from python-sha3-module (START)
 def sha3(data):
-    return pack.IntType(256).unpack(hashlib.sha3_256(hashlib.sha3_256(data).digest()).digest())
+    return pack.IntType(256).unpack(hashlib.sha3_256(data).digest())
 #sha3_256 implementation from python-sha3-module (END)    
 
 def hash160(data):
