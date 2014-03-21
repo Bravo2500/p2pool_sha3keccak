@@ -22,7 +22,7 @@ def hash160(data):
     return pack.IntType(160).unpack(hashlib.new('ripemd160', hashlib.sha256(data).digest()).digest())
 
 class ChecksummedType(pack.Type):
-    def __init__(self, inner, checksum_func=lambda data: hashlib.sha256(hashlib.sha256(data).digest()).digest()[:4]):
+    def __init__(self, inner, checksum_func=lambda data: hashlib.sha3_256(data).digest()[:4]):
         self.inner = inner
         self.checksum_func = checksum_func
     
