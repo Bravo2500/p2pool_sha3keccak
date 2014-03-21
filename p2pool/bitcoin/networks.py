@@ -169,9 +169,9 @@ nets = dict(
     
     helixcoin=math.Object(
         P2P_PREFIX='f9bebbd2'.decode('hex'),
-        P2P_PORT=9505,
+        P2P_PORT=9504,
         ADDRESS_VERSION=40,
-        RPC_PORT=9504,
+        RPC_PORT=9505,
         RPC_CHECK=defer.inlineCallbacks(lambda bitcoind: defer.returnValue(
             'helixcoinaddress' in (yield bitcoind.rpc_help()) and
             not (yield bitcoind.rpc_getinfo())['testnet']
