@@ -166,6 +166,28 @@ nets = dict(
         DUMB_SCRYPT_DIFF=1,
         DUST_THRESHOLD=0.001e8,
     ),
+    
+    helixcoin=math.Object(
+        P2P_PREFIX='f9bebbd2'.decode('hex'),
+        P2P_PORT=9505,
+        ADDRESS_VERSION=40,
+        RPC_PORT=9504,
+        RPC_CHECK=defer.inlineCallbacks(lambda bitcoind: defer.returnValue(
+            'helixcoinaddress' in (yield bitcoind.rpc_help()) and
+            not (yield bitcoind.rpc_getinfo())['testnet']
+        )),
+        SUBSIDY_FUNC=lambda height: 151*100000000,
+        POW_FUNC=data.sha3,
+        BLOCK_PERIOD=40, # s
+        SYMBOL='HXC',
+        CONF_FILE_FUNC=lambda: os.path.join(os.path.join(os.environ['APPDATA'], 'Helixcoin') if platform.system() == 'Windows' else os.path.expanduser('~/Library/Application Support/Helixcoin/') if platform.system() == 'Darwin' else os.path.expanduser('~/.helixcoin'), 'helixcoin.conf'),
+        BLOCK_EXPLORER_URL_PREFIX='http://explorer.helixcoinproject.com/block/',
+        ADDRESS_EXPLORER_URL_PREFIX='',
+        TX_EXPLORER_URL_PREFIX='',
+        SANE_TARGET_RANGE=(2**256//2**32//1000 - 1, 2**256//2**32 - 1),
+        DUMB_SCRYPT_DIFF=1,
+        DUST_THRESHOLD=0.001e8,
+    ),
 
     terracoin=math.Object(
         P2P_PREFIX='42babe56'.decode('hex'),
